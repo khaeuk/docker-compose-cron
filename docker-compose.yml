@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+    myapp:
+        hostname: myapp
+        build: .
+        container_name: myapp
+        command: > 
+            sh -c "python manage.py makemigrations
+            && python manage.py migrate 
+            && python manage.py runserver 0.0.0.0:8000"
+        ports:
+            - 8000:8000
+        volumes:
+            - cron-content:/src/cron
+            - ./:/src/testcron
+        networks: 
+            - dockernetwork
+        depends_on:
+            - mycron
+        restart: always
+        
+    
+    mycron:
+        hostname: mycron
+        build:
+            context: .
+            dockerfile: cron.Dockerfile
+        container_name: mycron
+        volumes:
+            - cron-content:/mycron_output
+        networks: 
+            - dockernetwork
+        restart: always
+
+volumes:
+    cron-content: {}
+          
+networks:
+    dockernetwork:
+        driver: bridge
+            
+
+
+    
