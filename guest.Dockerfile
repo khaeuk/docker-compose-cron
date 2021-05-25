@@ -10,5 +10,13 @@ WORKDIR /src
 
 RUN apt-get update
 
-RUN apt-get -y install openssh-server sudo
+# Install ssh / start ssh service / start daemon
+RUN apt -y install openssh-server
 RUN service ssh start
+RUN /usr/sbin/sshd -D &
+
+# Create non-root user
+RUN useradd -m --no-log-init --system --uid 1000 foobob -s /bin/bash -g sudo -G root
+
+# Chnage passwd
+RUN echo 'foobob:foobob' | chpasswd

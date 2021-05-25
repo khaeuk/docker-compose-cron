@@ -27,37 +27,38 @@ services:
             dockerfile: guest.Dockerfile
         container_name: guestapp
         command: >
-            tail -f /dev/null
+            bash -c "service ssh start && tail -f /dev/null"
         networks:
             - dockernetwork
         depends_on:
             - mycron
         restart: always
         
-    mycron:
-        hostname: mycron
-        image: docker:edge
-        container_name: mycron
-        command: >
-            tail -f /dev/null
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
-        networks:
-            - dockernetwork
-        restart: always
-        
     # mycron:
     #     hostname: mycron
-    #     build:
-    #         context: .
-    #         dockerfile: cron.Dockerfile
+    #     image: docker:edge
     #     container_name: mycron
+    #     command: >
+    #         tail -f /dev/null
     #     volumes:
-    #         - cron-content:/mycron_output
     #         - /var/run/docker.sock:/var/run/docker.sock
-    #     networks: 
+    #     networks:
     #         - dockernetwork
     #     restart: always
+        
+    mycron:
+        hostname: mycron
+        build:
+            context: .
+            dockerfile: cron.Dockerfile
+        container_name: mycron
+        # command: >
+        #     bash -c "service ssh start && tail -f /dev/null"
+        volumes:
+            - cron-content:/mycron_output
+        networks: 
+            - dockernetwork
+        restart: always
 
 volumes:
     cron-content: {}
