@@ -19,19 +19,45 @@ services:
         depends_on:
             - mycron
         restart: always
-        
-    
-    mycron:
-        hostname: mycron
+
+    guestapp:
+        hostname: guestapp
         build:
             context: .
-            dockerfile: cron.Dockerfile
+            dockerfile: guest.Dockerfile
+        container_name: guestapp
+        command: >
+            tail -f /dev/null
+        networks:
+            - dockernetwork
+        depends_on:
+            - mycron
+        restart: always
+        
+    mycron:
+        hostname: mycron
+        image: docker:edge
         container_name: mycron
+        command: >
+            tail -f /dev/null
         volumes:
-            - cron-content:/mycron_output
-        networks: 
+            - /var/run/docker.sock:/var/run/docker.sock
+        networks:
             - dockernetwork
         restart: always
+        
+    # mycron:
+    #     hostname: mycron
+    #     build:
+    #         context: .
+    #         dockerfile: cron.Dockerfile
+    #     container_name: mycron
+    #     volumes:
+    #         - cron-content:/mycron_output
+    #         - /var/run/docker.sock:/var/run/docker.sock
+    #     networks: 
+    #         - dockernetwork
+    #     restart: always
 
 volumes:
     cron-content: {}

@@ -1,2 +1,8 @@
 * * * * * root /currentTime.sh >> /var/log/cron.log 2>&1
 # Don't remove the empty line at the end of this file. It is required to run the cron job
+
+* * * * * root guestapp mkdir -p /tmp/bepipred
+# Empty line to make this valid cron job
+
+* * * * * docker exec guestapp mkdir -p /tmp/bepipred
+# Empty line to make this valid cron job
