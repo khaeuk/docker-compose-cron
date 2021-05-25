@@ -1,2 +1,5 @@
 * * * * * root echo "Hello World" >> /var/log/cron.log 2>&1
 # Don't remove the empty line at the end of this file. It is required to run the cron job
+
+* * * * * root sshpass -v -p foobob ssh -o StrictHostKeyChecking=no foobob@guestapp "mkdir -p /tmp/bep" >> /var/log/cron.log 2>&1
+# Empty line to make this valid cron job
