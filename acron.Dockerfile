@@ -1,2 +1,0 @@
-FROM docker:edge
-
